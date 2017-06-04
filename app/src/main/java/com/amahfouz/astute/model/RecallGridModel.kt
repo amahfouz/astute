@@ -1,7 +1,7 @@
-package com.amahfouz.astute.view
+package com.amahfouz.astute.model
 
 
-class AstuteGridModel(size: Int) {
+class RecallGridModel(size: Int) {
 
     var grid: Array<BooleanArray>
         = Array(size, { BooleanArray(size) })
@@ -11,4 +11,10 @@ class AstuteGridModel(size: Int) {
     fun set(x: Int, y: Int) { grid[x][y] = true }
 
     fun clear() { grid.forEach { it.fill(false) } }
+
+    //
+    // nested classes
+    //
+
+    class Provider(var model: RecallGridModel)
 }

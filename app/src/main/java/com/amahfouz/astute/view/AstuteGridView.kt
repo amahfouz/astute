@@ -2,6 +2,7 @@ package com.amahfouz.astute.view
 
 import android.content.Context
 import android.content.res.Resources
+import android.text.Layout
 
 import android.util.AttributeSet
 import android.view.View
@@ -10,6 +11,10 @@ import android.widget.BaseAdapter
 import android.widget.GridView
 import android.widget.TextView
 import com.amahfouz.astute.R
+import com.amahfouz.astute.model.RecallGridModel
+import android.content.ContentProvider
+
+
 
 /**
  * Grid view showing the main content of the app.
@@ -21,26 +26,20 @@ class AstuteGridView @JvmOverloads constructor
     : GridView(context, attrs, defStyleAttr) {
 
 
+    var model: RecallGridModel? = null
+        get() = this.model
+        set(value) {
+            getContentProvider()?.updateAll();
+        }
+
     init {
         adapter = Provider(context)
     }
 
-    class Provider(val ctx: Context) : BaseAdapter() {
+    //
+    // Private
+    //
 
-        override fun getItem(p0: Int): Any = 0
-        override fun getItemId(p0: Int): Long = 0
-        override fun getCount(): Int = 25
-
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-//            val view = TextView(ctx)
-//            view.text = "H"
-            val res = ctx.resources
-            val shape = res.getDrawable(R.drawable.circle)
-            val view = TextView(ctx)
-            view.text = "x"
-            view.setBackgroundDrawable(shape);
-            return view
-        }
-
-    }
+    private fun getContentProvider(): ContentProvider?
+         = adapter as? ContentProvider ?: null
 }

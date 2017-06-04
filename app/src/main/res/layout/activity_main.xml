@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.amahfouz.astute.MainActivity">
 
     <com.amahfouz.astute.view.AstuteGridView
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:columnWidth="60dp"
-        android:numColumns="auto_fit"
+        android:layout_height="match_parent"
+        android:columnWidth="50dp"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
-        android:stretchMode="none"
+        android:stretchMode="spacingWidth"
+        android:numColumns="6"
         android:gravity="center"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/astuteGridView" />
 
-    <!--<View android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:background="@drawable/circle"-->
-        <!--tools:layout_editor_absoluteY="114dp"-->
-        <!--tools:layout_editor_absoluteX="177dp" />-->
+        android:id="@+id/recallGridView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="52dp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"/>
 
 
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

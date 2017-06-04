@@ -20,4 +20,6 @@ class RandomSet(size: Int, max: Int) {
             }
         }
     }
+
+    fun contains(element: Int) = numbers.contains(element)
 }
