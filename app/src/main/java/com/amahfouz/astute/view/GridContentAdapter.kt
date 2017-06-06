@@ -7,13 +7,13 @@ import android.widget.AbsListView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.amahfouz.astute.R
+import com.amahfouz.astute.model.RecallGridModel
 
 /**
- * Provides grid content from grid model.
+ * Provides GridView cell content from a RecallGridModel.Provider.
  */
-class GridContentAdapter
-    (val ctx: Context, val numCells: Int, val columnWidth: Int)
-    : BaseAdapter() {
+class GridContentAdapter(val ctx: Context,
+                         val provider: RecallGridModel.Provider) : BaseAdapter() {
 
     //
     // BaseAdapter implementation
@@ -21,13 +21,15 @@ class GridContentAdapter
 
     override fun getItem(p0: Int): Any = 0
     override fun getItemId(p0: Int): Long = 0
-    override fun getCount(): Int = numCells
+    override fun getCount(): Int = provider.model.numCells
 
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+    override fun getView(index: Int, recycledView: View?, p2: ViewGroup?): View {
         val res = ctx.resources
         val shape = res.getDrawable(R.drawable.circle)
         val view = TextView(ctx)
-        view.layoutParams = AbsListView.LayoutParams(columnWidth, columnWidth)
+        val colWidth = provider.model.columnWidth
+        view.layoutParams = AbsListView.LayoutParams(colWidth, colWidth)
+        if (provider.model.get)
         view.setBackgroundDrawable(shape);
         return view
     }

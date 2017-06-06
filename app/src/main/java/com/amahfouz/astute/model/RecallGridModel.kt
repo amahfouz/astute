@@ -1,12 +1,20 @@
 package com.amahfouz.astute.model
 
-
+/**
+ * Provides content for the grid.
+ */
 class RecallGridModel(size: Int) {
+
+    val numCells: Int = size
+    var listener
+
 
     var grid: Array<BooleanArray>
         = Array(size, { BooleanArray(size) })
 
-    fun get(x: Int, y: Int) { grid[x][y] }
+    fun get(index: Int) =
+
+    fun get(x: Int, y: Int) = grid[x][y]
 
     fun set(x: Int, y: Int) { grid[x][y] = true }
 
@@ -16,5 +24,14 @@ class RecallGridModel(size: Int) {
     // nested classes
     //
 
-    class Provider(var model: RecallGridModel)
+    interface Provider {
+
+        fun getGridModel() : RecallGridModel
+
+        fun setListener(listener: Listener)
+
+        interface Listener {
+            fun cellChanged(index: Int)
+        }
+    }
 }

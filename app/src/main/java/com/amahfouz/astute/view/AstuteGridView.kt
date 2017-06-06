@@ -1,23 +1,15 @@
 package com.amahfouz.astute.view
 
 import android.content.Context
-import android.content.res.Resources
-import android.text.Layout
 
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.GridView
-import android.widget.TextView
-import com.amahfouz.astute.R
 import com.amahfouz.astute.model.RecallGridModel
 import android.content.ContentProvider
 
-
-
 /**
- * Grid view showing the main content of the app.
+ * Grid view showing the game board.
+ * Gets its content from an RecallGridModel.
  */
 class AstuteGridView @JvmOverloads constructor
     (context: Context,
@@ -25,9 +17,8 @@ class AstuteGridView @JvmOverloads constructor
      defStyleAttr: Int = 0)
     : GridView(context, attrs, defStyleAttr) {
 
-
-    var model: RecallGridModel? = null
-        get() = this.model
+    var provider: RecallGridModel.Provider?
+        get() = this.provider
         set(value) {
             getContentProvider()?.updateAll();
         }
