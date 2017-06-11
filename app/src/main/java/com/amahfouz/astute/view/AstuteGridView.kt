@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.GridView
 import com.amahfouz.astute.model.RecallGridModel
-import android.content.ContentProvider
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
@@ -21,12 +20,20 @@ class AstuteGridView @JvmOverloads constructor
     (context: Context,
      attrs: AttributeSet? = null,
      defStyleAttr: Int = 0)
-    : GridView(context, attrs, defStyleAttr) {
+    : GridView(context, attrs, defStyleAttr), RecallGridModel.Provider.Listener {
 
-    var provider: RecallGridModel.Provider?
+    var cells: Array<CellView> = Array(0, { _ -> CellView(context)} )
+
+    var model: RecallGridModel? = null
+        get() = provider?.getGridModel()
+        private set
+
+    var provider: RecallGridModel.Provider? = null
         get() = this.provider
         set(value) {
-            getContentProvider()?.updateAll();
+            field = value
+            if (cells.size != value?.getGridModel()?.numCells)
+                initCellsArray()
         }
 
     init {
@@ -34,13 +41,33 @@ class AstuteGridView @JvmOverloads constructor
     }
 
     //
+    // RecallGridModel.Provider.Listener implementation
+    //
+
+    override fun modelChanged() {
+        handleModelChanged()
+    }
+
+    override fun cellChanged(index: Int) {
+        if (index < cells.size) {
+            cells[index].state = model?.get(index)
+        }
+    }
+    //
     // Private
     //
 
-    private fun getContentProvider(): GridContentAdapter?
-         = adapter as? GridContentAdapter ?: null
+//    private fun getContentProvider(): GridContentAdapter?
+//         = adapter as? GridContentAdapter ?: null
 
-    private fun getModel(): RecallGridModel? = provider?.getGridModel()
+    private fun handleModelChanged() {
+        initCellsArray()
+    }
+
+    private fun initCellsArray() {
+        cells = Array(model?.numCells ?: 0, { _ -> CellView(context) } )
+        cells.forEachIndexed{ index, cell -> cell.state = model?.get(index) }
+    }
 
     //
     // Inner
@@ -57,15 +84,16 @@ class AstuteGridView @JvmOverloads constructor
 
         override fun getItem(p0: Int): Any = 0
         override fun getItemId(p0: Int): Long = 0
-        override fun getCount(): Int = provider.getGridModel().numCells
+        override fun getCount(): Int = model?.numCells ?: 0
 
         override fun getView(index: Int, recycledView: View?, p2: ViewGroup?): View {
+            val result: CellView = cells[index]
             val res = context.resources
             val shape = res.getDrawable(R.drawable.circle)
             val view = TextView(context)
-            val colWidth = provider.model.columnWidth
+            val colWidth = columnWidth
             view.layoutParams = AbsListView.LayoutParams(colWidth, colWidth)
-            if (provider.model.get)
+            if (getModel()?.get(index) ?: false)
                 view.setBackgroundDrawable(shape);
             return view
         }
