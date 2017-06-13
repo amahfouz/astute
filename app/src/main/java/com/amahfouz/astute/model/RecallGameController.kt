@@ -5,8 +5,6 @@ package com.amahfouz.astute.model
  */
 class RecallGameController {
 
-    var gridModel = RecallGridModel()
-
     enum class State {
         PREVIEW, SOLVE, IDLE
     }

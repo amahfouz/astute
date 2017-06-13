@@ -11,7 +11,7 @@ import com.amahfouz.astute.model.RecallGameController
 class RecallApp: Application() {
 
     companion object {
-        var mainController: RecallGameController = null
+        var mainController: RecallGameController? = null
 
     }
 }

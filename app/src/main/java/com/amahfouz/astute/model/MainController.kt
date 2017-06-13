@@ -3,11 +3,12 @@ package com.amahfouz.astute.model
 /**
  * Primary controller for the whole app.
  *
- *
+ * Manages grid state and displayed message.
  */
 class MainController(val ui: Game) : RecallGridModel.Provider {
 
-    var mGridModel : RecallGridModel? = null
+    var mGridModel : RecallGridModel = RecallGridModel(RecallGridModel.Dims(3, 5))
+
     var mListener : RecallGridModel.Provider.Listener? = null
 
     var message : String = ""

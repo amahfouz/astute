@@ -3,13 +3,12 @@ package com.amahfouz.astute.model
 /**
  * Provides content for the grid.
  */
-class RecallGridModel(val numCells: Int) {
+class RecallGridModel(val dims: Dims) {
 
-    enum class CellState {
-        EMPTY, FILLED, CORRECT, WRONG
-    }
+    var numCells: Int = 0
+        get() = dims.size
 
-    var grid: Array<CellState> = Array(numCells, { CellState.EMPTY })
+    var grid: Array<CellState> = Array(numCells, { CellState.FILLED })
 
     fun get(index: Int): CellState = grid[index]
 
@@ -20,6 +19,10 @@ class RecallGridModel(val numCells: Int) {
     //
     // nested classes
     //
+
+    class Dims(val width: Int, val height: Int) {
+        val size = width * height;
+    }
 
     interface Provider {
 

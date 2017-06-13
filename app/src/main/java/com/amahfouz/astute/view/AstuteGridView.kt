@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.BaseAdapter
-import android.widget.TextView
-import com.amahfouz.astute.R
 
 /**
  * Grid view showing the game board.
@@ -29,7 +27,6 @@ class AstuteGridView @JvmOverloads constructor
         private set
 
     var provider: RecallGridModel.Provider? = null
-        get() = this.provider
         set(value) {
             field = value
             if (cells.size != value?.getGridModel()?.numCells)
@@ -41,11 +38,29 @@ class AstuteGridView @JvmOverloads constructor
     }
 
     //
+    // View
+    //
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if (model == null)
+            return
+
+        val dims = model?.dims ?: RecallGridModel.Dims(1, 1)
+
+        val maxCellHeight = height / dims?.height
+        val maxCellWidth = width / dims?.width
+
+        columnWidth = maxCellWidth
+        numColumns = dims.width
+    }
+
+    //
     // RecallGridModel.Provider.Listener implementation
     //
 
     override fun modelChanged() {
-        handleModelChanged()
+        initCellsArray()
     }
 
     override fun cellChanged(index: Int) {
@@ -57,16 +72,10 @@ class AstuteGridView @JvmOverloads constructor
     // Private
     //
 
-//    private fun getContentProvider(): GridContentAdapter?
-//         = adapter as? GridContentAdapter ?: null
-
-    private fun handleModelChanged() {
-        initCellsArray()
-    }
-
     private fun initCellsArray() {
         cells = Array(model?.numCells ?: 0, { _ -> CellView(context) } )
         cells.forEachIndexed{ index, cell -> cell.state = model?.get(index) }
+
     }
 
     //
@@ -88,15 +97,9 @@ class AstuteGridView @JvmOverloads constructor
 
         override fun getView(index: Int, recycledView: View?, p2: ViewGroup?): View {
             val result: CellView = cells[index]
-            val res = context.resources
-            val shape = res.getDrawable(R.drawable.circle)
-            val view = TextView(context)
-            val colWidth = columnWidth
-            view.layoutParams = AbsListView.LayoutParams(colWidth, colWidth)
-            if (getModel()?.get(index) ?: false)
-                view.setBackgroundDrawable(shape);
-            return view
+            result.state = model?.get(index)
+            result.layoutParams = AbsListView.LayoutParams(columnWidth, columnWidth)
+            return result
         }
-
     }
 }
