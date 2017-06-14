@@ -8,12 +8,12 @@
     <com.amahfouz.astute.view.AstuteGridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="50dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="spacingWidth"
-        android:numColumns="6"
+        android:columnWidth="150dp"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="none"
         android:gravity="center"
+        android:background="@color/colorPrimaryDark"
 
         android:id="@+id/recallGridView"
         android:layout_alignParentTop="true"

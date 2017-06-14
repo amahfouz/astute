@@ -7,7 +7,7 @@ package com.amahfouz.astute.model
  */
 class MainController(val ui: Game) : RecallGridModel.Provider {
 
-    var mGridModel : RecallGridModel = RecallGridModel(RecallGridModel.Dims(3, 5))
+    var mGridModel : RecallGridModel = RecallGridModel(RecallGridModel.Dims(5, 8))
 
     var mListener : RecallGridModel.Provider.Listener? = null
 

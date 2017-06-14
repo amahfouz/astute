@@ -20,8 +20,8 @@ class RecallGridModel(val dims: Dims) {
     // nested classes
     //
 
-    class Dims(val width: Int, val height: Int) {
-        val size = width * height;
+    class Dims(val cols: Int, val rows: Int) {
+        val size = cols * rows;
     }
 
     interface Provider {

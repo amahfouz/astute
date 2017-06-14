@@ -48,11 +48,30 @@ class AstuteGridView @JvmOverloads constructor
 
         val dims = model?.dims ?: RecallGridModel.Dims(1, 1)
 
-        val maxCellHeight = height / dims?.height
-        val maxCellWidth = width / dims?.width
+        numColumns = model?.dims?.cols ?: 0
 
-        columnWidth = maxCellWidth
-        numColumns = dims.width
+        val numRows = dims?.rows
+        val numCols = dims?.cols
+
+        val maxCellHeight = height / numRows
+        val maxCellWidth = width / numCols
+
+        if (maxCellWidth > maxCellHeight) {
+            verticalSpacing = 10
+            val availRowHeight = height - (numRows - 1) * verticalSpacing
+            val rowHeight = availRowHeight / numRows
+            val colWidth = rowHeight
+            horizontalSpacing = (width - (colWidth * numCols)) / (numCols - 1)
+            columnWidth = colWidth
+        }
+        else {
+            horizontalSpacing = 10
+            val availColWidth = width - (numCols - 1) * horizontalSpacing
+            val colWidth = availColWidth / numCols
+            val rowHeight = colWidth
+            verticalSpacing = (height - (rowHeight * numRows)) / (numRows - 1)
+            columnWidth = colWidth
+        }
     }
 
     //
@@ -61,6 +80,7 @@ class AstuteGridView @JvmOverloads constructor
 
     override fun modelChanged() {
         initCellsArray()
+        numColumns = model?.dims?.cols ?: 0
     }
 
     override fun cellChanged(index: Int) {
