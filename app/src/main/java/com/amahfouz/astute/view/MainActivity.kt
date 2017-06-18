@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import com.amahfouz.astute.model.MainController
+import com.amahfouz.astute.model.RecallGridModel
 import com.amahfouz.astute.view.AstuteGridView
 
 class MainActivity : AppCompatActivity() {
@@ -20,9 +21,11 @@ class MainActivity : AppCompatActivity() {
         this.grid = findViewById(R.id.recallGridView) as AstuteGridView
         this.message = findViewById(R.id.messageView) as TextView
 
-        this.controller = MainController(GameView())
+        this.controller = MainController(GameView(), grid!!)
 
-        this.grid?.provider = controller
+        this.grid!!.provider = controller.gridProvider
+
+        controller!!.start()
     }
 
     inner class GameView: MainController.Game {
