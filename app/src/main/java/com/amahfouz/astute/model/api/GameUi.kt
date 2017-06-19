@@ -1,7 +1,6 @@
 package com.amahfouz.astute.model.api
 
 import com.amahfouz.astute.model.CellState
-import com.amahfouz.astute.model.RecallGameUi
 
 /**
  * API between game model (Non-Android-specific code) and
@@ -23,11 +22,17 @@ interface GameUi {
 
     interface Grid {
 
+        fun fill(state: CellState)
+        fun resize(dims: Dims)
         fun updateCell(position: Int, state: CellState)
         fun setListener(l: Listener)
 
         interface Listener {
             fun handleClick(position: Int)
+        }
+
+        class Dims(val cols: Int, val rows: Int) {
+            val size = cols * rows;
         }
     }
 

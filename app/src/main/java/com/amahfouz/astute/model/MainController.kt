@@ -1,33 +1,14 @@
 package com.amahfouz.astute.model
 
+import com.amahfouz.astute.model.api.GameUi
+
 /**
  * Primary controller for the whole app.
  *
  * Manages grid state and displayed message.
  */
-class MainController(val ui: Game) : RecallGridModel.Provider {
+class MainController(ui: GameUi) {
 
-    var mGridModel : RecallGridModel = RecallGridModel(RecallGridModel.Dims(5, 8))
+    var game = RecallGame(RecallGame.Config(ui, GameUi.Grid.Dims(3,5), 3, 10000))
 
-    var mListener : RecallGridModel.Provider.Listener? = null
-
-    var message : String = ""
-        private set(value) {
-            field = value
-            ui?.messageChanged()
-        }
-
-    override fun getGridModel(): RecallGridModel = mGridModel
-
-    override fun setListener(listener: RecallGridModel.Provider.Listener) {
-        mListener = listener
-    }
-
-    //
-    // Nested
-    //
-
-    interface Game {
-        fun messageChanged();
-    }
 }

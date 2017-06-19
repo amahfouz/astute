@@ -1,7 +1,6 @@
 package com.amahfouz.astute.view
 
 import android.app.Application
-import com.amahfouz.astute.model.RecallGameController
 
 /**
  * Extends application to store global state.
@@ -11,7 +10,6 @@ import com.amahfouz.astute.model.RecallGameController
 class RecallApp: Application() {
 
     companion object {
-        var mainController: RecallGameController? = null
 
     }
 }

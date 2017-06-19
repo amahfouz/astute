@@ -12,20 +12,21 @@ import com.amahfouz.astute.model.CellState
 class CellView(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
     : ImageView(context, attrs, defStyleAttr, defStyleRes) {
 
-    var state : CellState? = CellState.EMPTY
+    var state : CellState = CellState()
         set(newState) {
-            val (resId, hasBackground) = when (newState) {
-                CellState.EMPTY -> Pair(0, false)
-                CellState.FILLED -> Pair(0, true)
-                CellState.CORRECT -> Pair(R.drawable.check_mark, true)
-                CellState.WRONG -> Pair(R.drawable.x, true)
+            field = newState
+            val resId = when (newState.match) {
+                CellState.Match.CORRECT -> R.drawable.check_mark
+                CellState.Match.WRONG -> R.drawable.x
                 else -> {
-                    Pair(0, false)
+                    -1
                 }
             }
 
-            setImageDrawable(if (resId > 0) resources.getDrawable(resId) else null)
-            setBackgroundDrawable(if (hasBackground) resources.getDrawable(R.drawable.circle) else null)
+            setImageDrawable(if (resId >= 0) resources.getDrawable(resId) else null)
+            setBackgroundDrawable(if (newState.filled) resources.getDrawable(R.drawable.circle) else null)
+
+            invalidate()
         }
 
 }

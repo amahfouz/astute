@@ -3,7 +3,7 @@ package com.amahfouz.astute.model
 /**
  * Random set of n unique integers between 0 and max
  */
-class RandomSet(size: Int, max: Int) {
+class RandomSet(size: Int, max: Int) : Iterable<Int>{
 
     val numbers = IntArray(size)
 
@@ -22,4 +22,13 @@ class RandomSet(size: Int, max: Int) {
     }
 
     fun contains(element: Int) = numbers.contains(element)
+
+    //
+    // Iterable implementation
+    //
+
+    override fun iterator(): Iterator<Int> {
+        return numbers.iterator()
+    }
+
 }

@@ -4,11 +4,13 @@ import android.content.Context
 
 import android.util.AttributeSet
 import android.widget.GridView
-import com.amahfouz.astute.model.RecallGridModel
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.BaseAdapter
+import android.widget.AdapterView
+import com.amahfouz.astute.model.CellState
+import com.amahfouz.astute.model.api.GameUi
 
 /**
  * Grid view showing the game board.
@@ -18,23 +20,47 @@ class AstuteGridView @JvmOverloads constructor
     (context: Context,
      attrs: AttributeSet? = null,
      defStyleAttr: Int = 0)
-    : GridView(context, attrs, defStyleAttr), RecallGridModel.Provider.Listener {
+    : GridView(context, attrs, defStyleAttr), GameUi.Grid {
 
-    var cells: Array<CellView> = Array(0, { _ -> CellView(context)} )
-
-    var model: RecallGridModel? = null
-        get() = provider?.getGridModel()
-        private set
-
-    var provider: RecallGridModel.Provider? = null
-        set(value) {
-            field = value
-            if (cells.size != value?.getGridModel()?.numCells)
-                initCellsArray()
-        }
+    private var cells: Array<CellView> = Array(0, { _ -> CellView(context)} )
+    private var _listener : GameUi.Grid.Listener? = null
+    private var _dims : GameUi.Grid.Dims = GameUi.Grid.Dims(1, 1)
 
     init {
         adapter = GridContentAdapter()
+        onItemClickListener = AdapterView.OnItemClickListener {
+            _, _, position, _ ->
+            _listener?.handleClick(position)
+        }
+
+    }
+
+    //
+    // GameUi.Grid implementation
+    //
+
+    override fun resize(dims: GameUi.Grid.Dims) {
+        if (dims.equals(_dims))
+            return
+
+        _dims = dims
+        numColumns = dims.size
+
+        cells = Array(_dims.size, { _ -> CellView(context) } )
+
+        invalidate()
+    }
+
+    override fun fill(state: CellState) {
+        cells.forEach { cell -> cell.state = state }
+    }
+
+    override fun updateCell(position: Int, state: CellState) {
+        cells[position].state = state
+    }
+
+    override fun setListener(l: GameUi.Grid.Listener) {
+        _listener = l
     }
 
     //
@@ -43,15 +69,11 @@ class AstuteGridView @JvmOverloads constructor
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (model == null)
-            return
 
-        val dims = model?.dims ?: RecallGridModel.Dims(1, 1)
+        numColumns = _dims?.cols
 
-        numColumns = model?.dims?.cols ?: 0
-
-        val numRows = dims?.rows
-        val numCols = dims?.cols
+        val numRows = _dims?.rows
+        val numCols = _dims?.cols
 
         val maxCellHeight = height / numRows
         val maxCellWidth = width / numCols
@@ -75,30 +97,6 @@ class AstuteGridView @JvmOverloads constructor
     }
 
     //
-    // RecallGridModel.Provider.Listener implementation
-    //
-
-    override fun modelChanged() {
-        initCellsArray()
-        numColumns = model?.dims?.cols ?: 0
-    }
-
-    override fun cellChanged(index: Int) {
-        if (index < cells.size) {
-            cells[index].state = model?.get(index)
-        }
-    }
-    //
-    // Private
-    //
-
-    private fun initCellsArray() {
-        cells = Array(model?.numCells ?: 0, { _ -> CellView(context) } )
-        cells.forEachIndexed{ index, cell -> cell.state = model?.get(index) }
-
-    }
-
-    //
     // Inner
     //
 
@@ -113,11 +111,10 @@ class AstuteGridView @JvmOverloads constructor
 
         override fun getItem(p0: Int): Any = 0
         override fun getItemId(p0: Int): Long = 0
-        override fun getCount(): Int = model?.numCells ?: 0
+        override fun getCount(): Int = cells.size
 
         override fun getView(index: Int, recycledView: View?, p2: ViewGroup?): View {
             val result: CellView = cells[index]
-            result.state = model?.get(index)
             result.layoutParams = AbsListView.LayoutParams(columnWidth, columnWidth)
             return result
         }

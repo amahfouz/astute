@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.amahfouz.astute.MainActivity">
+    android:layout_height="match_parent" tools:context="com.amahfouz.astute.view.MainActivity">
 
     <com.amahfouz.astute.view.AstuteGridView
         android:layout_width="match_parent"
@@ -13,7 +13,6 @@
         android:horizontalSpacing="0dp"
         android:stretchMode="none"
         android:gravity="center"
-        android:background="@color/colorPrimaryDark"
 
         android:id="@+id/recallGridView"
         android:layout_alignParentTop="true"
