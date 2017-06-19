@@ -1,5 +1,12 @@
 package com.amahfouz.astute.model
 
-enum class CellState {
-    EMPTY, FILLED, CORRECT, WRONG
+/**
+ * A cell can be in one of four states as specified by
+ * the two booleans held here.
+ */
+class CellState (val filled: Boolean = false, val correct: Match = CellState.Match.NONE){
+
+    enum class Match {
+        CORRECT, WRONG, NONE
+    }
 }
