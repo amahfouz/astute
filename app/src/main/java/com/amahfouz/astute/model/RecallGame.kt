@@ -68,6 +68,8 @@ class RecallGame(val config: Config) : GameUi.Grid.Listener {
 
     inner class Solve : State {
 
+        var numCorrectMatches = 0
+
         constructor() {
             // clear all cells
             grid.fill(CellState())
@@ -81,15 +83,31 @@ class RecallGame(val config: Config) : GameUi.Grid.Listener {
 
             selected.add(position)
 
+            val correct = solution.contains(position)
             val match
-                    = if (solution.contains(position))
+                    = if (correct)
                         CellState.Match.CORRECT
-                    else
+                      else
                         CellState.Match.WRONG
 
             val cellState = CellState(true, match)
 
             grid.updateCell(position, cellState)
+
+            if (correct)
+                numCorrectMatches++
+
+            if (numCorrectMatches == solution.size) {
+                message.set("Good Job!")
+                state = Done()
+            }
+        }
+    }
+
+    inner class Done : State {
+
+        override fun handleSelect(position: Int) {
+
         }
     }
 }

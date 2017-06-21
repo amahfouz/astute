@@ -3,9 +3,9 @@ package com.amahfouz.astute.model
 /**
  * Random set of n unique integers between 0 and max
  */
-class RandomSet(size: Int, max: Int) : Iterable<Int>{
+class RandomSet(val size: Int, max: Int) : Iterable<Int>{
 
-    val numbers = IntArray(size)
+    private val numbers = IntArray(size)
 
     init {
         var rand: Int;

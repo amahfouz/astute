@@ -24,7 +24,8 @@ class CellView(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int
             }
 
             setImageDrawable(if (resId >= 0) resources.getDrawable(resId) else null)
-            setBackgroundDrawable(if (newState.filled) resources.getDrawable(R.drawable.circle) else null)
+            val backgroundResId = if (newState.filled) R.drawable.filled_circle else R.drawable.circle
+            setBackgroundDrawable(resources.getDrawable(backgroundResId))
 
             invalidate()
         }

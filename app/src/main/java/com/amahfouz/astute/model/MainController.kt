@@ -9,6 +9,6 @@ import com.amahfouz.astute.model.api.GameUi
  */
 class MainController(ui: GameUi) {
 
-    var game = RecallGame(RecallGame.Config(ui, GameUi.Grid.Dims(3,5), 3, 10000))
+    var game = RecallGame(RecallGame.Config(ui, GameUi.Grid.Dims(4,7), 5, 5000))
 
 }
