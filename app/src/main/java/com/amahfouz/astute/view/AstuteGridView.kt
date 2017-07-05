@@ -11,6 +11,7 @@ import android.widget.BaseAdapter
 import android.widget.AdapterView
 import com.amahfouz.astute.model.CellState
 import com.amahfouz.astute.model.api.GameUi
+import com.amahfouz.astute.model.api.GridDims
 
 /**
  * Grid view showing the game board.
@@ -24,7 +25,7 @@ class AstuteGridView @JvmOverloads constructor
 
     private var cells: Array<CellView> = Array(0, { _ -> CellView(context)} )
     private var _listener : GameUi.Grid.Listener? = null
-    private var _dims : GameUi.Grid.Dims = GameUi.Grid.Dims(1, 1)
+    private var _dims : GridDims = GridDims(1, 1)
 
     init {
         adapter = GridContentAdapter()
@@ -39,7 +40,7 @@ class AstuteGridView @JvmOverloads constructor
     // GameUi.Grid implementation
     //
 
-    override fun resize(dims: GameUi.Grid.Dims) {
+    override fun resize(dims: GridDims) {
         if (dims.equals(_dims))
             return
 

@@ -7,8 +7,37 @@ import com.amahfouz.astute.model.api.GameUi
  *
  * Manages grid state and displayed message.
  */
-class MainController(ui: GameUi) {
+class MainController(val ui: GameUi) : RecallGame.Listener {
 
-    var game = RecallGame(RecallGame.Config(ui, GameUi.Grid.Dims(4,7), 5, 5000))
+    var curLevelIndex: Int = 0
+    var game = startNewLevel()
 
+    //
+    // RecallGame.Listener
+    //
+
+    override fun gameEnded(isWin: Boolean) {
+        // move to next level
+        curLevelIndex++
+        if (curLevelIndex < LEVEL_SPECS.size)
+            game = startNewLevel()
+    }
+
+    //
+    // private
+    //
+
+    private fun startNewLevel() : RecallGame {
+
+        // allow old game to be GCed
+        game?.setListener(null)
+
+        // start new level
+        val newGame = RecallGame(ui, LEVEL_SPECS[curLevelIndex])
+
+        // register to get notified when game is over
+        newGame.setListener(this)
+
+        return newGame
+    }
 }

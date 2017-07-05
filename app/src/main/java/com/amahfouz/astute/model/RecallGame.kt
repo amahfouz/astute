@@ -7,27 +7,40 @@ import com.amahfouz.astute.model.api.GameUi
  *
  * The game can be in two modes, preview and solve.
  */
-class RecallGame(val config: Config) : GameUi.Grid.Listener {
+class RecallGame(val ui: GameUi,
+                 val level: LevelSpec) : GameUi.Grid.Listener {
 
     // grid UI
     private val grid : GameUi.Grid
-        get() = config.ui.getGrid()
+        get() = ui.getGrid()
 
     // message UI
     private val message : GameUi.Message
-        get() = config.ui.getMessage()
+        get() = ui.getMessage()
 
     // cells randomly chosen as the puzzle code
-    val solution = RandomSet(config.setSize, config.dims.size - 1)
+    private val solution = RandomSet(level.config.numCircles,
+                                     level.config.dims.size - 1)
 
     // cells user have selected so far in SOLVE mode
-    var selected : MutableList<Int> = mutableListOf()
+    private var selected : MutableList<Int> = mutableListOf()
 
     // cur state of the game
-    var state : State = Preview()
+    private var state : State = Preview()
+
+    // listens to game over event
+    private  var listener: Listener? = null
 
     init {
-        config.ui.getGrid().setListener(this)
+        ui.getGrid().setListener(this)
+    }
+
+    //
+    // public
+    //
+
+    public fun setListener(l: Listener?) {
+        this.listener = l
     }
 
     //
@@ -42,10 +55,9 @@ class RecallGame(val config: Config) : GameUi.Grid.Listener {
     // nested and inner
     //
 
-    class Config(val ui : GameUi,
-                 val dims: GameUi.Grid.Dims,
-                 val setSize: Int,
-                 val previewTime: Long)
+    interface Listener {
+        fun gameEnded(isWin: Boolean)
+    }
 
     interface State {
         fun handleSelect(position: Int)
@@ -54,11 +66,11 @@ class RecallGame(val config: Config) : GameUi.Grid.Listener {
     inner class Preview : State {
 
         constructor() {
-            grid.resize(config.dims)
+            grid.resize(level.config.dims)
             grid.fill(CellState())
             solution.forEach { pos -> grid.updateCell(pos, CellState(true)) }
             message.set("Stare and remember!")
-            config.ui.getTimer().schedule(config.previewTime, Runnable { state = Solve() })
+            ui.getTimer().schedule(level.config.previewTime, Runnable { state = Solve() })
         }
 
         override fun handleSelect(position: Int) {
@@ -107,7 +119,7 @@ class RecallGame(val config: Config) : GameUi.Grid.Listener {
     inner class Done : State {
 
         override fun handleSelect(position: Int) {
-
+            listener?.gameEnded(isWin = true)
         }
     }
 }

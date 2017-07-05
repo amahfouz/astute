@@ -23,16 +23,12 @@ interface GameUi {
     interface Grid {
 
         fun fill(state: CellState)
-        fun resize(dims: Dims)
+        fun resize(dims: GridDims)
         fun updateCell(position: Int, state: CellState)
         fun setListener(l: Listener)
 
         interface Listener {
             fun handleClick(position: Int)
-        }
-
-        class Dims(val cols: Int, val rows: Int) {
-            val size = cols * rows;
         }
     }
 
