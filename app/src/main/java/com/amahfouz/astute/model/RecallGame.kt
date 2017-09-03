@@ -102,7 +102,7 @@ class RecallGame(val ui: GameUi,
                       else
                         CellState.Match.WRONG
 
-            val cellState = CellState(true, match)
+            val cellState = CellState(correct, match)
 
             grid.updateCell(position, cellState)
 
