@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Astute</string>
+    <string name="excellent_result">Excellent!</string>
+    <string name="very_good_result">Very good!</string>
+    <string name="good_result">Good!</string>
+    <string name="do_better_result">You can do better!</string>
 </resources>

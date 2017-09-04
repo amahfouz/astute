@@ -1,7 +1,9 @@
 package com.amahfouz.astute.view
 
 import android.support.v7.app.AppCompatActivity
+import android.support.design.widget.Snackbar
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import com.amahfouz.astute.R
 import com.amahfouz.astute.model.MainController
@@ -15,15 +17,14 @@ class MainActivity : AppCompatActivity() {
 
     var grid: AstuteGridView? = null
     var message: TextView? = null
-
     var controller: MainController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.grid = findViewById(R.id.recallGridView) as AstuteGridView
-        this.message = findViewById(R.id.messageView) as TextView
+        this.grid = findViewById<AstuteGridView>(R.id.recallGridView) as AstuteGridView
+        this.message = findViewById<TextView>(R.id.messageView) as TextView
 
         this.controller = MainController(GameView())
     }
@@ -35,10 +36,19 @@ class MainActivity : AppCompatActivity() {
     inner class GameView: GameUi {
 
         val timerWrapper = JavaTimerWrapper()
-        val messageWrapper = MessageView()
+        val popup = MessagePopup()
+        val messageRef = MessageView()
+
+        //
+        // interface methods
+        //
+
+        override fun getPopup() : GameUi.Popup {
+            return popup
+        }
 
         override fun getMessage() : GameUi.Message {
-            return messageWrapper
+            return messageRef
         }
 
         override fun getGrid(): GameUi.Grid {
@@ -54,9 +64,27 @@ class MainActivity : AppCompatActivity() {
         //
 
         inner class MessageView : GameUi.Message {
-
             override fun set(msg: String) {
                 message?.text = msg
+            }
+
+        }
+
+        inner class MessagePopup : GameUi.Popup {
+
+            var bar : Snackbar? = null
+
+            override fun hide() {
+                bar?.dismiss()
+            }
+
+            override fun show(message: String, actionLabel: String, action: () -> Unit) {
+                val bar = Snackbar.make(grid as View, message, Snackbar.LENGTH_INDEFINITE)
+
+                if (action != null) {
+                    bar.setAction(actionLabel, { _ -> action() })
+                }
+                bar.show()
             }
         }
     }

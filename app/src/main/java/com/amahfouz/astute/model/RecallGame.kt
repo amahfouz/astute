@@ -112,6 +112,7 @@ class RecallGame(val ui: GameUi,
             if (numCorrectMatches == solution.size) {
                 message.set("Good Job!")
                 state = Done()
+                listener?.gameEnded(isWin = true)
             }
         }
     }
@@ -119,7 +120,6 @@ class RecallGame(val ui: GameUi,
     inner class Done : State {
 
         override fun handleSelect(position: Int) {
-            listener?.gameEnded(isWin = true)
         }
     }
 }

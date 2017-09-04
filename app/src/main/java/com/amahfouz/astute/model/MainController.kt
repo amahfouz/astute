@@ -17,15 +17,19 @@ class MainController(val ui: GameUi) : RecallGame.Listener {
     //
 
     override fun gameEnded(isWin: Boolean) {
-        // move to next level
-        curLevelIndex++
-        if (curLevelIndex < LEVEL_SPECS.size)
-            game = startNewLevel()
+        ui.getPopup().show("Good", "Continue", this::goNext)
     }
 
     //
     // private
     //
+
+    private fun goNext() {
+        // move to next level
+        curLevelIndex++
+        if (curLevelIndex < LEVEL_SPECS.size)
+            game = startNewLevel()
+    }
 
     private fun startNewLevel() : RecallGame {
 
