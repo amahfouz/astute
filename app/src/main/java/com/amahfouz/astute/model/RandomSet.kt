@@ -5,7 +5,8 @@ package com.amahfouz.astute.model
  */
 class RandomSet(val size: Int, max: Int) : Iterable<Int>{
 
-    private val numbers = IntArray(size)
+    var numbers = IntArray(size)
+        private set
 
     init {
         var rand: Int;

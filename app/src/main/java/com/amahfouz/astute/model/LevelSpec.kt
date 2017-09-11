@@ -3,7 +3,7 @@ package com.amahfouz.astute.model
 import com.amahfouz.astute.model.api.GridDims
 
 /**
- * Created by amahfouz on 7/3/17.
+ * Spec of a level.
  */
 class LevelSpec(val number: Int, val config: Config) {
 
