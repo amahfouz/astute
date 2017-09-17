@@ -39,7 +39,7 @@ class RecallGame(val ui: GameUi,
     // public
     //
 
-    public fun setListener(l: Listener?) {
+    fun setListener(l: Listener?) {
         this.listener = l
     }
 
