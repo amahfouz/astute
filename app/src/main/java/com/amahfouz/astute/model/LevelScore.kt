@@ -37,21 +37,29 @@ package com.amahfouz.astute.model
  */
 class LevelScore(private val levelSpec: LevelSpec, private val numMistakes: Int, private val timeTaken: Long) {
 
-    public fun calc() : Long{
+    companion object {
+        fun calcMaxScore(levelSpec: LevelSpec): Int {
+            val g = levelSpec.config.dims.cols * levelSpec.config.dims.rows;
+            val n = levelSpec.config.numCircles;
+            return  3 * g * g + n * n
+        }
+    }
+
+    fun calc() : Long {
         val g = levelSpec.config.dims.cols * levelSpec.config.dims.rows;
         val n = levelSpec.config.numCircles;
-        val p = 10 * g + 8 * n
+        val p = calcMaxScore(levelSpec)
         val ta = when (g) {
-                    in 1..12 -> 2000
-                    in 2..20 -> 3000
-                    else -> 4000
-                 }
-        val dw = p / maxOf(1, n/2)
+            in 1..12 -> 2000
+            in 2..20 -> 3000
+            else -> 4000
+        }
+        val dw = p / n
 
         val sd = p - dw * numMistakes
         val dt = sd / 5
 
-        val s = sd - maxOf(timeTaken - ta, 0) * dt
+        val s = sd - maxOf((timeTaken - ta) / 1000, 0) * dt
 
         return maxOf(s, 0)
     }
