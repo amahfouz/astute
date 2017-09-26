@@ -52,11 +52,11 @@ class LevelScore(private val levelSpec: LevelSpec, private val numMistakes: Int,
         val ta = when (g) {
             in 1..12 -> 2000
             in 2..20 -> 3000
-            else -> 4000
+            else -> 5000
         }
         val dw = p / n
 
-        val sd = p - dw * numMistakes
+        val sd = maxOf(p - dw * numMistakes, 0)
         val dt = sd / 5
 
         val s = sd - maxOf((timeTaken - ta) / 1000, 0) * dt
