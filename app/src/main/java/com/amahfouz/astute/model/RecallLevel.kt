@@ -7,8 +7,8 @@ import com.amahfouz.astute.model.api.GameUi
  *
  * The game can be in two modes, preview and solve.
  */
-class RecallGame(val ui: GameUi,
-                 val level: LevelSpec) : GameUi.Grid.Listener {
+class RecallLevel(val ui: GameUi,
+                  val level: LevelSpec) : GameUi.Grid.Listener {
 
     // grid UI
     private val grid : GameUi.Grid
@@ -56,7 +56,7 @@ class RecallGame(val ui: GameUi,
     //
 
     interface Listener {
-        fun gameEnded(isWin: Boolean)
+        fun levelEnded(score: Long)
     }
 
     interface State {
@@ -69,7 +69,6 @@ class RecallGame(val ui: GameUi,
             grid.resize(level.config.dims)
             grid.fill(CellState())
             solution.forEach { pos -> grid.updateCell(pos, CellState(true)) }
-            message.set("Stare and remember!")
             ui.getTimer().schedule(level.config.previewTime, Runnable { state = Solve() })
         }
 
@@ -80,12 +79,13 @@ class RecallGame(val ui: GameUi,
 
     inner class Solve : State {
 
-        var numCorrectMatches = 0
+        private var numCorrectMatches = 0
+        private var numWrongAnswers = 0
+        private val startTime = System.currentTimeMillis();
 
         constructor() {
             // clear all cells
             grid.fill(CellState())
-            message.set("Remember circle locations?")
         }
 
         override fun handleSelect(position: Int) {
@@ -108,11 +108,13 @@ class RecallGame(val ui: GameUi,
 
             if (correct)
                 numCorrectMatches++
+            else
+                numWrongAnswers++
 
             if (numCorrectMatches == solution.size) {
-                message.set("Good Job!")
                 state = Done()
-                listener?.gameEnded(isWin = true)
+                val timeTaken = System.currentTimeMillis() - startTime
+                listener?.levelEnded(LevelScore(level, numWrongAnswers, timeTaken).calc())
             }
         }
     }
@@ -120,6 +122,7 @@ class RecallGame(val ui: GameUi,
     inner class Done : State {
 
         override fun handleSelect(position: Int) {
+            // do nothing
         }
     }
 }

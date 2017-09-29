@@ -10,6 +10,7 @@ import com.amahfouz.astute.model.api.GameUi
  */
 class RecallGameState(private val ui: GameUi) {
 
+    // ID of ongoing level or the one to be started next
     var curLevelIndex: Int = 0
         private set
 
@@ -17,31 +18,36 @@ class RecallGameState(private val ui: GameUi) {
         get() = LEVEL_SPECS[curLevelIndex]
         private set(v) {}
 
-    var curScore: Int = 0
-        private set
-
     var done : Boolean
         get() = curLevelIndex >= LEVEL_SPECS.size
         private set(v) {}
+
+    var totalScore : Long = 0
+        private set
+
+    val maxPossibleScore : Int = LEVEL_SPECS.sumBy { LevelScore.calcMaxScore(it) }
 
     var listener: Listener? = null
 
     private var level = startNewLevel()
 
     //
-    // functions
+    // public
     //
 
     interface Listener {
-        fun levelEnded(score: Long)
+        fun levelEnded(message : String)
     }
 
     fun goToNextLevel() {
         if (! done) {
-            curLevelIndex++
             level = startNewLevel()
         }
     }
+
+    //
+    // private
+    //
 
     private fun startNewLevel() : RecallLevel {
 
@@ -57,10 +63,14 @@ class RecallGameState(private val ui: GameUi) {
         return newLevel
     }
 
-     inner class LevelListener : RecallLevel.Listener {
+    inner class LevelListener : RecallLevel.Listener {
 
         override fun levelEnded(score: Long) {
-            listener?.levelEnded(score = score)
+            totalScore += score
+            val percentage = score * 100 / LevelScore.calcMaxScore(curLevelSpec)
+            val message = LevelScore.messageForPercentage(percentage.toInt() )
+            curLevelIndex++
+            listener?.levelEnded(message)
         }
     }
 }

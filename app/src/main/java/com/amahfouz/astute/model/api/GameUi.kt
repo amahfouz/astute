@@ -11,18 +11,18 @@ import com.amahfouz.astute.model.CellState
  */
 interface GameUi {
 
-    fun getPopup() : Popup
+    fun getToast() : Toast
     fun getMessage() : Message
     fun getGrid() : Grid
     fun getTimer() : Timer
 
-    interface Popup {
+    interface Toast {
         fun show(message: String, actionLabel: String, action: () -> Unit)
         fun hide()
     }
 
     interface Message {
-        fun set(msg: String)
+        fun show(msg: String)
     }
 
     interface Grid {

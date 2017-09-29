@@ -43,6 +43,17 @@ class LevelScore(private val levelSpec: LevelSpec, private val numMistakes: Int,
             val n = levelSpec.config.numCircles;
             return  3 * g * g + n * n
         }
+
+        fun messageForPercentage(percentage : Int) : String {
+            return when (percentage) {
+                100 -> "Perfect!"
+                in 85..99 -> "Very Good!"
+                in 70..84 -> "Good."
+                in 40..69 -> "You can do better!"
+                in 20..39 -> "Wake up!"
+                else -> "Seriously?"
+            }
+        }
     }
 
     fun calc() : Long {

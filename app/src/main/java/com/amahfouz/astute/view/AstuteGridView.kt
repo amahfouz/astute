@@ -25,7 +25,7 @@ class AstuteGridView @JvmOverloads constructor
 
     private var cells: Array<CellView> = Array(0, { _ -> CellView(context)} )
     private var _listener : GameUi.Grid.Listener? = null
-    private var _dims : GridDims = GridDims(1, 1)
+    private var _dims : GridDims = GridDims(3, 4)
 
     init {
         adapter = GridContentAdapter()
@@ -41,9 +41,6 @@ class AstuteGridView @JvmOverloads constructor
     //
 
     override fun resize(dims: GridDims) {
-        if (dims.equals(_dims))
-            return
-
         _dims = dims
         numColumns = dims.size
 
@@ -54,6 +51,7 @@ class AstuteGridView @JvmOverloads constructor
 
     override fun fill(state: CellState) {
         cells.forEach { cell -> cell.state = state }
+        invalidate()
     }
 
     override fun updateCell(position: Int, state: CellState) {

@@ -7,17 +7,23 @@ import com.amahfouz.astute.model.api.GameUi
  *
  * Manages grid state and displayed message.
  */
-class MainController(val ui: GameUi) : RecallGame.Listener {
+class MainController(private val ui: GameUi) : RecallGameState.Listener {
 
-    var curLevelIndex: Int = 0
-    var game = startNewLevel()
+    private var game : RecallGameState? = null
+
+    fun newGame() {
+        // allow previous game to be GCed
+        game?.listener = null
+        game = RecallGameState(ui)
+        game?.listener = this
+    }
 
     //
-    // RecallGame.Listener
+    // RecallLevel.Listener
     //
 
-    override fun gameEnded(isWin: Boolean) {
-        ui.getPopup().show("Good", "Continue", this::goNext)
+    override fun levelEnded(message : String) {
+        ui.getToast().show(message, "Continue", this::goNext)
     }
 
     //
@@ -26,22 +32,11 @@ class MainController(val ui: GameUi) : RecallGame.Listener {
 
     private fun goNext() {
         // move to next level
-        curLevelIndex++
-        if (curLevelIndex < LEVEL_SPECS.size)
-            game = startNewLevel()
-    }
-
-    private fun startNewLevel() : RecallGame {
-
-        // allow old game to be GCed
-        game?.setListener(null)
-
-        // start new level
-        val newGame = RecallGame(ui, LEVEL_SPECS[curLevelIndex])
-
-        // register to get notified when game is over
-        newGame.setListener(this)
-
-        return newGame
+        if (game!!.done) {
+            val percent = 100 * game!!.totalScore / game!!.maxPossibleScore
+            ui.getMessage().show("You scored $percent%")
+        }
+        else
+            game!!.goToNextLevel()
     }
 }
