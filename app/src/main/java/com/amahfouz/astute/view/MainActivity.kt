@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     var grid: AstuteGridView? = null
 
-    private var controller: MainController? = null
+    private lateinit var controller: MainController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

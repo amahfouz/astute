@@ -12,6 +12,11 @@ val _5sec = 5000L
 val _3sec = 3000L
 
 
+/**
+ * Level configurations.
+ * Each entry specifies board dimension and number of circles.
+ */
+
 private val levelConfig: Array<LevelSpec.Config> = arrayOf(
 //    LevelSpec.Config(dims3x3, 2, _3sec, "You get 5 seconds to memorize which circles are filled, then you have to recall them!"),
     LevelSpec.Config(dims3x4, 4, _3sec, "Grids get larger, but back to 5 seconds for now!"),
